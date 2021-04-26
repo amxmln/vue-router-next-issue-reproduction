@@ -2,17 +2,19 @@
   <div class="about">
     <h1>About</h1>
     <p>
-      Clicking the button below or the "Home" link will "delay" the navigation
-      and show a toast below instead, which would allow the user to either navigate, or cancel.
+      Clicking the button below or the "Home" link will "delay" the navigation and show a toast
+      below instead, which would allow the user to either navigate, or cancel.
     </p>
-    <p>This does not work as expected: the URL changes immediately and doesn’t change back.
-      Also, going back multiple times will eventually unload the Vue app.</p>
+    <p>
+      This does not work as expected: the URL changes immediately and doesn’t change back. Also,
+      going back multiple times will eventually unload the Vue app.
+    </p>
     <button @click="$router.back()">Go Back</button>
     <ul class="toasts">
       <li v-for="(toast, index) in toasts" :key="index">
-        {{toast.message}}
-        <button @click="handleToastAction(toast.action, index)">{{toast.actionLabel}}</button>
-        <button @click="closeToast">Close</button>
+        {{ toast.message }}
+        <button @click="handleToastAction(index)">{{ toast.actionLabel }}</button>
+        <button @click="closeToast(index)">Close</button>
       </li>
     </ul>
   </div>
@@ -37,15 +39,13 @@ export default {
       this.toasts.push(toast);
     },
     closeToast(index) {
-      this.toasts.splice(index, 1);
+      const toast = this.toasts.splice(index, 1)[0];
+      toast.action(false);
     },
-    handleToastAction(action, index) {
-      action();
-      this.closeToast(index);
+    handleToastAction(index) {
+      const toast = this.toasts.splice(index, 1)[0];
+      toast.action();
     },
   },
 };
 </script>
-
-<style lang="css" scoped>
-</style>
